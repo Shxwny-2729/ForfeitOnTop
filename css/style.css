@@ -12,7 +12,7 @@
 
 .title {
   position: fixed;
-  z-index: 21;
+  z-index: 15;
   width: calc(100% - 2rem);
   max-width: 100%;
   text-align: center;

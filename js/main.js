@@ -37,15 +37,18 @@ const sceneCamera = document.getElementById('scene-camera');
 
 const photoCards = photoFiles.map(({ file, alt }, index) => {
   const card = document.createElement('figure');
+  const motionFrame = document.createElement('div');
   const image = document.createElement('img');
 
   card.className = `photo-card photo-card--${index + 1}`;
   card.style.setProperty('--reveal-delay', `${index * photoRevealStagger}ms`);
+  motionFrame.className = 'photo-card__motion';
   image.className = 'photo-card__image';
   image.src = `images/kit/${encodeURIComponent(file)}`;
   image.alt = alt;
   image.loading = 'eager';
-  card.append(image);
+  motionFrame.append(image);
+  card.append(motionFrame);
   photoGarden.append(card);
 
   return card;
@@ -115,6 +118,20 @@ onload = () => {
         };
 
         card.classList.add('photo-card--featured');
+        const photoMovement = card.querySelector('.photo-card__motion').animate(
+          [
+            { transform: 'translate(0, 0) rotate(0deg) scale(1)' },
+            { transform: 'translate(7px, -5px) rotate(1deg) scale(1.025)', offset: 0.25 },
+            { transform: 'translate(-6px, -3px) rotate(-1.2deg) scale(1.04)', offset: 0.5 },
+            { transform: 'translate(5px, 6px) rotate(0.8deg) scale(1.025)', offset: 0.75 },
+            { transform: 'translate(0, 0) rotate(0deg) scale(1)' }
+          ],
+          {
+            duration: photoZoomDuration * 2 + photoFocusDuration,
+            easing: 'ease-in-out',
+            fill: 'both'
+          }
+        );
         sceneCamera.style.transformOrigin = '0 0';
         const zoomIn = sceneCamera.animate(
           [{ transform: 'translate(0, 0) scale(1)' }, { transform: focusTransform }],
@@ -131,6 +148,7 @@ onload = () => {
         await zoomOut.finished;
         zoomOut.cancel();
         zoomIn.cancel();
+        photoMovement.cancel();
         sceneCamera.style.transformOrigin = 'center';
         card.classList.remove('photo-card--featured');
 

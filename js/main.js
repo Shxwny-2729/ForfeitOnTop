@@ -33,28 +33,7 @@ const photoZoomDuration = 5200;
 const photoFocusDuration = 2800;
 const photoResetPause = 650;
 const photoZoomEasing = 'cubic-bezier(0.22, 0.61, 0.36, 1)';
-const loveNotes = [
-  'Somehow, ordinary days feel brighter when you are in them.',
-  'Of all the little moments, the ones with you stay with me.',
-  'You make my favorite memories feel even warmer.',
-  'If I could keep one thing, I would keep this feeling.',
-  'Here is a little reminder: you mean a lot to me.'
-];
 const sceneCamera = document.getElementById('scene-camera');
-const loveNote = document.getElementById('love-note');
-const loveNoteText = document.getElementById('love-note-text');
-let loveNoteIndex = 0;
-
-function showNextLoveNote() {
-  loveNoteIndex = (loveNoteIndex + 1) % loveNotes.length;
-  loveNoteText.textContent = loveNotes[loveNoteIndex];
-}
-
-function startLoveNotes() {
-  loveNoteText.textContent = loveNotes[loveNoteIndex];
-  loveNote.classList.add('love-note--visible');
-  setInterval(showNextLoveNote, 6500);
-}
 
 const photoCards = photoFiles.map(({ file, alt }, index) => {
   const card = document.createElement('figure');
@@ -94,7 +73,6 @@ onload = () => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         photoCards.forEach((card) => card.style.setProperty('--reveal-delay', '0ms'));
         photoGarden.classList.add('photo-garden--ready');
-        startLoveNotes();
         return;
       }
 
@@ -159,9 +137,8 @@ onload = () => {
         await new Promise((resolve) => setTimeout(resolve, photoResetPause));
         await showNextPhoto(index + 1);
       };
-
       photoGarden.classList.add('photo-garden--ready');
-      startLoveNotes();
+      photoGarden.classList.add('photo-garden--ready');
       const revealDuration = photoFadeDuration + (photoCards.length - 1) * photoRevealStagger;
 
       setTimeout(() => {

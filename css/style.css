@@ -11,16 +11,22 @@
 }
 
 .title {
-  position: absolute;
-  width: 100%;
+  position: fixed;
+  z-index: 21;
+  width: calc(100% - 2rem);
+  max-width: 100%;
   text-align: center;
-  margin-top: 50px;
+  margin: 0;
+  padding-top: clamp(1.25rem, 5vh, 3rem);
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   color: white;
   font-family: 'Courier New', Courier, monospace;
-  font-size: 70px;
-  text-shadow: 0px 0px 20px white;
+  font-size: clamp(1.55rem, 6vw, 4.4rem);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  text-shadow: 0 0 20px white;
 }
 
 body {
@@ -1285,6 +1291,68 @@ body {
   animation-delay: var(--float-delay, 0s);
 }
 
+.love-note {
+  position: fixed;
+  z-index: 30;
+  right: 1rem;
+  bottom: clamp(1rem, 5vh, 3rem);
+  left: 1rem;
+  width: min(31rem, calc(100% - 2rem));
+  margin-inline: auto;
+  padding: 1.15rem 1.4rem 1rem;
+  color: #fff8f4;
+  text-align: center;
+  background: linear-gradient(145deg, rgba(48, 29, 43, 0.8), rgba(19, 23, 36, 0.78));
+  border: 1px solid rgba(255, 229, 239, 0.3);
+  border-radius: 1.25rem;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3), 0 0 2rem rgba(255, 190, 218, 0.12);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  transform: translateY(0.75rem);
+  transition: opacity 700ms ease, transform 700ms ease;
+  pointer-events: none;
+}
+
+.love-note--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.love-note__eyebrow,
+.love-note__signature {
+  display: block;
+  color: #f5c8da;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.64rem;
+  letter-spacing: 0.2em;
+}
+
+.love-note__eyebrow {
+  margin-bottom: 0.65rem;
+}
+
+.love-note__text {
+  min-height: 3.2em;
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1rem, 2.7vw, 1.35rem);
+  line-height: 1.5;
+  text-wrap: balance;
+  transition: opacity 400ms ease, transform 400ms ease;
+}
+
+.love-note__text--changing {
+  opacity: 0;
+  transform: translateY(0.3rem);
+}
+
+.love-note__signature {
+  margin-top: 0.65rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+}
+
 .photo-card--1 {
   top: 12%;
   left: 12%;
@@ -1353,14 +1421,13 @@ body {
   }
 
   50% {
-    translate: 0 -8px;
+    translate: 0 -14px;
   }
 }
 
 @media (max-width: 700px) {
   .title {
-    margin-top: 28px;
-    font-size: clamp(32px, 9vw, 52px);
+    font-size: clamp(1.4rem, 7vw, 2.8rem);
   }
 
   .photo-card {
@@ -1400,6 +1467,16 @@ body {
     left: 69%;
   }
 
+  .love-note {
+    bottom: 1rem;
+    padding: 0.9rem 1rem 0.8rem;
+    border-radius: 1rem;
+  }
+
+  .love-note__text {
+    min-height: 4.5em;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1420,6 +1497,11 @@ body {
   }
 
   .photo-card {
+    transition: none;
+  }
+
+  .love-note,
+  .love-note__text {
     transition: none;
   }
 }

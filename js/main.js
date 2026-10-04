@@ -41,7 +41,7 @@ const photoCards = photoFiles.map(({ file, alt }, index) => {
   card.className = `photo-card photo-card--${index + 1}`;
   card.style.setProperty('--reveal-delay', `${index * photoRevealStagger}ms`);
   image.className = 'photo-card__image';
-  image.src = `images/kit/${encodeURIComponent(file)}`;
+  image.src = `images/Kit/${encodeURIComponent(file)}`;
   image.alt = alt;
   image.loading = 'eager';
   card.append(image);

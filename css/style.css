@@ -1339,12 +1339,6 @@ body {
   font-size: clamp(1rem, 2.7vw, 1.35rem);
   line-height: 1.5;
   text-wrap: balance;
-  transition: opacity 400ms ease, transform 400ms ease;
-}
-
-.love-note__text--changing {
-  opacity: 0;
-  transform: translateY(0.3rem);
 }
 
 .love-note__signature {
@@ -1501,9 +1495,6 @@ body {
   }
 
   .love-note,
-  .love-note__text {
-    transition: none;
-  }
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -46,13 +46,8 @@ const loveNoteText = document.getElementById('love-note-text');
 let loveNoteIndex = 0;
 
 function showNextLoveNote() {
-  loveNoteText.classList.add('love-note__text--changing');
-
-  setTimeout(() => {
-    loveNoteIndex = (loveNoteIndex + 1) % loveNotes.length;
-    loveNoteText.textContent = loveNotes[loveNoteIndex];
-    loveNoteText.classList.remove('love-note__text--changing');
-  }, 400);
+  loveNoteIndex = (loveNoteIndex + 1) % loveNotes.length;
+  loveNoteText.textContent = loveNotes[loveNoteIndex];
 }
 
 function startLoveNotes() {

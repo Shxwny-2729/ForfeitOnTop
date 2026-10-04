@@ -112,6 +112,7 @@ onload = () => {
         };
 
         card.classList.add('photo-card--featured');
+        photoGarden.classList.add('photo-garden--zooming');
         const photoMovement = card.animate(
           [
             { translate: `${translateX}px ${translateY}px`, rotate: '0deg' },
@@ -143,6 +144,7 @@ onload = () => {
         zoomIn.cancel();
         photoMovement.cancel();
         card.classList.remove('photo-card--featured');
+        photoGarden.classList.remove('photo-garden--zooming');
 
         await new Promise((resolve) => setTimeout(resolve, photoResetPause));
         await showNextPhoto(index + 1);

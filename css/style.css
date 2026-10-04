@@ -11,8 +11,8 @@
 }
 
 .title {
-  position: fixed;
-  z-index: 15;
+  position: absolute;
+  z-index: 0;
   width: calc(100% - 2rem);
   max-width: 100%;
   text-align: center;
@@ -21,12 +21,14 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  opacity: 1;
   color: white;
   font-family: 'Courier New', Courier, monospace;
   font-size: clamp(1.55rem, 6vw, 4.4rem);
   line-height: 1.1;
   overflow-wrap: anywhere;
   text-shadow: 0 0 20px white;
+  transition: opacity 300ms ease;
 }
 
 body {
@@ -1242,6 +1244,10 @@ body {
   animation: photo-garden-fade-in 1.8s ease both;
 }
 
+.photo-garden--zooming .title {
+  opacity: 0;
+}
+
 @keyframes photo-garden-fade-in {
   from {
     opacity: 0;
@@ -1264,6 +1270,7 @@ body {
 
 .photo-card {
   position: absolute;
+  z-index: 1;
   width: clamp(82px, 12vw, 154px);
   height: clamp(112px, 18vw, 204px);
   margin: 0;
@@ -1425,6 +1432,10 @@ body {
   }
 
   .photo-card {
+    transition: none;
+  }
+
+  .title {
     transition: none;
   }
 

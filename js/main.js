@@ -33,22 +33,18 @@ const photoZoomDuration = 5200;
 const photoFocusDuration = 2800;
 const photoResetPause = 650;
 const photoZoomEasing = 'cubic-bezier(0.22, 0.61, 0.36, 1)';
-const sceneCamera = document.getElementById('scene-camera');
 
 const photoCards = photoFiles.map(({ file, alt }, index) => {
   const card = document.createElement('figure');
-  const motionFrame = document.createElement('div');
   const image = document.createElement('img');
 
   card.className = `photo-card photo-card--${index + 1}`;
   card.style.setProperty('--reveal-delay', `${index * photoRevealStagger}ms`);
-  motionFrame.className = 'photo-card__motion';
   image.className = 'photo-card__image';
   image.src = `images/kit/${encodeURIComponent(file)}`;
   image.alt = alt;
   image.loading = 'eager';
-  motionFrame.append(image);
-  card.append(motionFrame);
+  card.append(image);
   photoGarden.append(card);
 
   return card;
@@ -81,19 +77,17 @@ onload = () => {
 
       const showNextPhoto = async (index) => {
         if (index >= photoCards.length) {
-          sceneCamera.animate(
-            [{ transform: 'scale(1)' }, { transform: 'scale(0.88)' }],
-            {
-              duration: 6500,
-              easing: photoZoomEasing,
-              fill: 'forwards'
-            }
-          );
           return;
         }
 
         const card = photoCards[index];
         const image = card.querySelector('.photo-card__image');
+        const baseTransform = getComputedStyle(card).transform;
+        const photoTilt = Number.parseFloat(getComputedStyle(card).getPropertyValue('--photo-tilt')) || 0;
+        const currentTranslate = getComputedStyle(card).translate;
+        const [translateX = 0, translateY = 0] = currentTranslate === 'none'
+          ? []
+          : currentTranslate.split(/\s+/).map((value) => Number.parseFloat(value) || 0);
         const imageBounds = image.getBoundingClientRect();
         const imageAspect = image.naturalWidth / image.naturalHeight;
         const isRotated = card.classList.contains('photo-card--4');
@@ -110,7 +104,7 @@ onload = () => {
         const focusWidth = Math.min(window.innerWidth * 0.94, window.innerHeight * 0.9 * displayedAspect);
         const focusHeight = focusWidth / displayedAspect;
         const zoomScale = Math.min(focusWidth / displayedWidth, focusHeight / displayedHeight);
-        const focusTransform = `translate(${window.innerWidth / 2 - focusPoint.x * zoomScale}px, ${window.innerHeight / 2 - focusPoint.y * zoomScale}px) scale(${zoomScale})`;
+        const focusTransform = `translate(${window.innerWidth / 2 - focusPoint.x}px, ${window.innerHeight / 2 - focusPoint.y}px) rotate(${photoTilt}deg) scale(${0.84 * zoomScale})`;
         const animationOptions = {
           duration: photoZoomDuration,
           easing: photoZoomEasing,
@@ -118,13 +112,13 @@ onload = () => {
         };
 
         card.classList.add('photo-card--featured');
-        const photoMovement = card.querySelector('.photo-card__motion').animate(
+        const photoMovement = card.animate(
           [
-            { transform: 'translate(0, 0) rotate(0deg) scale(1)' },
-            { transform: 'translate(7px, -5px) rotate(1deg) scale(1.025)', offset: 0.25 },
-            { transform: 'translate(-6px, -3px) rotate(-1.2deg) scale(1.04)', offset: 0.5 },
-            { transform: 'translate(5px, 6px) rotate(0.8deg) scale(1.025)', offset: 0.75 },
-            { transform: 'translate(0, 0) rotate(0deg) scale(1)' }
+            { translate: `${translateX}px ${translateY}px`, rotate: '0deg' },
+            { translate: `${translateX + 7}px ${translateY - 5}px`, rotate: '1deg', offset: 0.25 },
+            { translate: `${translateX - 6}px ${translateY - 3}px`, rotate: '-1.2deg', offset: 0.5 },
+            { translate: `${translateX + 5}px ${translateY + 6}px`, rotate: '0.8deg', offset: 0.75 },
+            { translate: `${translateX}px ${translateY}px`, rotate: '0deg' }
           ],
           {
             duration: photoZoomDuration * 2 + photoFocusDuration,
@@ -132,24 +126,22 @@ onload = () => {
             fill: 'both'
           }
         );
-        sceneCamera.style.transformOrigin = '0 0';
-        const zoomIn = sceneCamera.animate(
-          [{ transform: 'translate(0, 0) scale(1)' }, { transform: focusTransform }],
+        const zoomIn = card.animate(
+          [{ transform: baseTransform }, { transform: focusTransform }],
           animationOptions
         );
         await zoomIn.finished;
 
         await new Promise((resolve) => setTimeout(resolve, photoFocusDuration));
 
-        const zoomOut = sceneCamera.animate(
-          [{ transform: focusTransform }, { transform: 'translate(0, 0) scale(1)' }],
+        const zoomOut = card.animate(
+          [{ transform: focusTransform }, { transform: baseTransform }],
           animationOptions
         );
         await zoomOut.finished;
         zoomOut.cancel();
         zoomIn.cancel();
         photoMovement.cancel();
-        sceneCamera.style.transformOrigin = 'center';
         card.classList.remove('photo-card--featured');
 
         await new Promise((resolve) => setTimeout(resolve, photoResetPause));
